@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+        body{
+            display:flex; 
+        }
+        .img{
+            position:absolute;
+            width:500px;
+            z-index:-1;
+        }
+        button{
+            margin:0 0 0 20px;
+            width:70px;
+            height:28px;
+            border:3px solid rgb(5,5,5);
+            border-radius:5px;
+            background:rgb(220,220,220);
+          color: rgb(20,20,20);
+            font-weight:600;
+        }
+        
+        @media screen and (max-width:800px){
+            body{
+                display:block;
+            }
+            .img{
+                width:100%;
+            }
+            button{
+                margin:10px 0 0 0;
+            }
+
+        }
+    </style>
+  </head>
+  <body>
+       <div>
+        <img src="https://picsum.photos/400/400" class="img"/>
+       <canvas width="800" height="800" id="canvas" />
+     </div>
+     <div>
+        <button onclick="play()">Replay</button>
+     </div>
+  </body>
+  <script>
+         let running=false;
+        let w;
+        let h;
+        let dy;
+        
+        const can=document.getElementById('canvas');
+        const img=document.getElementsByClassName('img')[0];
+        const ctx=can.getContext('2d');
+
+        window.onresize=fit;
+        document.body.onload=play;
+        
+        function fit(){
+            can.setAttribute('width',img.clientWidth);
+            can.setAttribute('height',img.clientHeight);
+            dy=Math.floor(can.clientWidth/120);
+            can.setAttribute('width',Math.floor(can.clientWidth/dy)*dy);
+            can.setAttribute('height',Math.floor(can.clientHeight/dy)*dy);
+            w=can.clientWidth;
+            h=can.clientHeight;
+        }
+        
+        function play(){
+            if(!running){
+                running=true;
+                
+                fit();
+                   
+            ctx.fillStyle="rgb(80,80,80)";
+            ctx.fillRect(0,0,w,h);
+            sorted.reverse();
+            let squares=[];   
+            
+            async function getSquares(){
+                while(sorted.length>0){
+                    const rnd=sorted.length>100?Math.floor(100*Math.pow(Math.random(),2)):0;
+                    squares.push(sorted.splice(rnd,1));
+                }
+            }
+            
+            getSquares();
+            
+            window.requestAnimationFrame(pikselit); 
+            
+            let prev=0;
+            let m=0;
+            
+            function pikselit (timeStamp){
+                if(timeStamp-prev>10){
+                    if(squares.length>0){
+                        running=true;
+                        let max=squares.length>150?50+(100*m/length):squares.length;
+                        for(let j=0;j<max;j++){
+                            let elem=squares.splice(0,1)[0][0];
+                            ctx.clearRect(elem.x,elem.y,dy,dy);
+                            m++;
+                        }
+                    }else{
+                        running=false;
+                    }
+                    prev=timeStamp;
+                }
+                window.requestAnimationFrame(pikselit);
+            }
+        };
+}
+              </script>
+</html>
