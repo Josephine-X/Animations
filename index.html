@@ -37,16 +37,18 @@
     </style>
   </head>
   <body>
-       <div>
+      <div class="container">
+    <div>
         <img src="https://picsum.photos/400/400" class="img"/>
        <canvas width="800" height="800" id="canvas" />
      </div>
      <div>
         <button onclick="play()">Replay</button>
      </div>
+   </div>
   </body>
   <script>
-         let running=false;
+      let running=false;
         let w;
         let h;
         let dy;
@@ -76,6 +78,22 @@
                    
             ctx.fillStyle="rgb(80,80,80)";
             ctx.fillRect(0,0,w,h);
+
+            let y=0;
+            let x=0;
+            let coordinates=[];
+
+            while(y+dy<=h){
+                x=0;
+                while(x+dy<=w){                                  
+                    coordinates.push({x:x,y:y});
+                    x=x+dy;
+                }
+                y=y+dy;
+            }
+
+            const length=coordinates.length;
+            let sorted=coordinates.sort((a,b)=>Math.sqrt(Math.pow(Math.abs(b.x-w/2),2)+Math.pow(Math.abs(b.y-h/2),2))-Math.sqrt(Math.pow(Math.abs(a.x-w/2),2)+Math.pow(Math.abs(a.y-h/2),2)));
             sorted.reverse();
             let squares=[];   
             
@@ -111,6 +129,8 @@
                 window.requestAnimationFrame(pikselit);
             }
         };
+}
+  </script>
 }
               </script>
 </html>
