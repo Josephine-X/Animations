@@ -39,7 +39,7 @@
   <body>
       <div class="container">
     <div>
-        <img src="https://picsum.photos/400/400" class="img"/>
+        <img src="https://picsum.photos/400/400" id="img"/>
        <canvas width="800" height="800" id="canvas" />
      </div>
      <div>
@@ -51,7 +51,7 @@
         let running=false,w,h,dy;
         
         const can=document.getElementById('canvas');
-        const img=document.getElementsByClassName('img')[0];
+        const img=document.getElementsById('img');
         const ctx=can.getContext('2d');
 
         window.onresize=fit;
@@ -67,38 +67,38 @@
         
         function play(){
             if(!running){
-                running=true;
+              running=true;
                 
-                fit();
+              fit();
                    
-            ctx.fillStyle="rgb(80,80,80)";
-            ctx.fillRect(0,0,w,h);
+              ctx.fillStyle="rgb(80,80,80)";
+              ctx.fillRect(0,0,w,h);
 
-            let y=0;
-            let x=0;
-            let coordinates=[];
+              let y=0;
+              let x=0;
+              let koordinaatit=[];
 
             //koordinaatit pikseleille
-            while(y+dy<=h){
+              while(y+dy<=h){
                 x=0;
                 while(x+dy<=w){                                  
-                    coordinates.push({x:x,y:y});
+                    koordinaatit.push({x:x,y:y});
                     x+=dy;
                 }
                 y+=dy;
-            }
+              }
 
-            const length=coordinates.length;
-            //Järjestää pikselit lähempänä keskustaa olevat ensin
-            let sorted=coordinates.sort((a,b)=>Math.hypot(b.x-w/2,b.y-h/2)-Math.hypot(a.x-w/2,a.y-h/2));
-            sorted.reverse();
-            let squares=[];   
+              const length=coordinates.length;
+              //Järjestää pikselit lähempänä keskustaa olevat ensin
+              let koordinaatitSorted=koordinaatit.sort((a,b)=>Math.hypot(b.x-w/2,b.y-h/2)-Math.hypot(a.x-w/2,a.y-h/2));
+             koordinaatitSorted.reverse();
+             let pikselit=[];   
             
             //hakee pikseleitä jonoon
             async function haePikselit(){
-                while(sorted.length>0){
-                    const rnd=sorted.length>100?Math.floor(100*Math.pow(Math.random(),2)):0;
-                    squares.push(sorted.splice(rnd,1));
+                while(koordinaatitSorted.length>0){
+                    const rnd=koordinaatitSorted.length>100?Math.floor(100*Math.pow(Math.random(),2)):0;
+                    pikselit.push(koordinaatitSorted.splice(rnd,1));
                 }
             }
             
@@ -106,23 +106,23 @@
             
             window.requestAnimationFrame(piirrä); 
             
-            let prev=0;
+            let edel=0;
             let m=0;
             
             function piirrä (timeStamp){
-                if(timeStamp-prev>10){
-                    if(squares.length>0){
+                if(timeStamp-edel>10){
+                    if(pikselit.length>0){
                         running=true;
-                        let max=squares.length>150?50+(100*m/length):squares.length;
+                        let max=pikselit.length>150?50+(100*m/length):pikselit.length;
                         for(let j=0;j<max;j++){
-                            let elem=squares.splice(0,1)[0][0];
+                            let elem=pikselit.splice(0,1)[0][0];
                             ctx.clearRect(elem.x,elem.y,dy,dy);
                             m++;
                         }
                     }else{
                         running=false;
                     }
-                    prev=timeStamp;
+                    edel=timeStamp;
                 }
                 window.requestAnimationFrame(piirrä);
             }
