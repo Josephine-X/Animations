@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+        <style>
+            body,html{
+                height:100%;
+                padding:0;
+                margin:0;
+            }
+            circle{
+                stroke:rgb(150,150,80);
+                fill:rgb(5,5,5);
+            }
+            line{
+                stroke:rgb(50,50,10);
+            }
+        </style>
+    </head>
+    <body>
+        <svg id="svg" width="100%" height="400" ><rect x="0" y="0" width="100%" height="100%" fill="rgb(5,5,5)" /></svg>
+    </body>
+    <script>
+        let svg=document.getElementById('svg');
+        let width=svg.clientWidth;
+        let height=svg.getAttribute('height');
+        let rect=document.getElementsByTagName('rect')[0];
+        let a=[];
+        let r=width/120;
+        for(let i=0;i<10;i++){
+            let w, h;
+            let d=true;
+            while(d){
+                w=Math.floor(r+5+(width-2*(r+5))*Math.random());
+                h=Math.floor(r+5+(height-2*(r+5))*Math.random());
+                d=false;
+                for(let j=0;j<a.length;j++){
+                    if(Math.hypot(Math.abs(w-a[j][0]),Math.abs(h-a[j][1]))<Math.floor(svg.clientWidth)/9){
+                        d=true;
+                    }
+                }
+            }
+            a.push([w,h]);
+        }
+        for(let i=0;i<a.length;i++){
+            let elem=document.createElementNS('http://www.w3.org/2000/svg','circle');
+            elem.setAttribute('cx',a[i][0]);
+            elem.setAttribute('cy',a[i][1]);
+            elem.setAttribute('r',r);
+            elem.setAttribute('stroke-width',r/10);
+            svg.append(elem);
+        }
+        let elems=document.getElementsByTagName('circle');
+        for(let i=0;i<a.length;i++){
+            for(let j=i+1;j<a.length;j++){
+                let el=document.createElementNS('http://www.w3.org/2000/svg','line');
+                el.setAttribute('x1',a[i][0]);
+                el.setAttribute('x2',a[j][0]);
+                el.setAttribute('y1',a[i][1]);
+                el.setAttribute('y2',a[j][1]);
+                elems[0].before(el);
+            }
+        }
+
+        tt();
+
+        let int =setInterval(function () {tt()},4000);
+
+        function tt(){
+            let lines=document.getElementsByTagName('line');
+            let rnd1=Math.floor(10*Math.random());
+            let rnd2=rnd1;
+            while(rnd1==rnd2){
+                rnd2=Math.floor(10*Math.random());
+            }
+
+            let nn;
+            for(let i=0;i<lines.length;i++){
+                let x1=lines[i].getAttribute('x1');
+                let x2=lines[i].getAttribute('x2');
+                let y1=lines[i].getAttribute('y1');
+                let y2=lines[i].getAttribute('y2');
+
+                if((a[rnd1][0]==x1 & a[rnd1][1]==y1 & a[rnd2][0]==x2 & a[rnd2][1]==y2)|(a[rnd2][0]==x1 & a[rnd2][1]==y1 & a[rnd1][0]==x2 & a[rnd1][1]==y2)){
+                    nn=i;
+                }
+            }
+            let lineEl=lines[nn];
+           
+            lineEl.remove();
+            elems[0].before(lineEl);
+            lines=document.getElementsByTagName('line');
+
+            let tl=gsap.timeline();
+            tl.to([elems[rnd1],elems[rnd2],lines[nn]],{duration:3,fill:'rgb(80,80,40)',ease:"expo.out"})
+                .to(lineEl,{duration:3,stroke:'rgb(150,150,80)',ease:"none"},"-=1.5")
+                .to([elems[rnd1],elems[rnd2],lines[nn]],{duration:1.5,fill:'rgb(5,5,5)',ease:"none"})
+                .to(lineEl,{duration:1.5,stroke:'rgb(50,50,10)',ease:"none"},"-=1.5");
+        }
+</script>
+</html>
