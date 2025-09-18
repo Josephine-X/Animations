@@ -86,18 +86,18 @@
                     nn=i;
                 }
             }
+            
             let lineEl=lines[nn];
-           
             lineEl.remove();
             elems[0].before(lineEl);
-            lines=document.getElementsByTagName('line');
 
             let tl=gsap.timeline();
             tl.to([elems[rnd1],elems[rnd2],lines[nn]],{duration:3,fill:'rgb(80,80,40)',ease:"expo.out"})
-                .to(lineEl,{duration:3,stroke:'rgb(150,150,80)',ease:"none"},"-=1.5")
+                .to(lineEl,{duration:3,stroke:'rgb(150,150,80)',ease:"none"},"-=3")
                 .to([elems[rnd1],elems[rnd2],lines[nn]],{duration:1.5,fill:'rgb(5,5,5)',ease:"none"})
                 .to(lineEl,{duration:1.5,stroke:'rgb(50,50,10)',ease:"none"},"-=1.5");
         }
 </script>
 
 </html>
+
